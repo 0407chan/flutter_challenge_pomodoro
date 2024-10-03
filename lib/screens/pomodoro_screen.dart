@@ -8,7 +8,7 @@ import 'package:pomodoro/components/time_select_button.dart';
 import 'package:pomodoro/components/timer_button.dart';
 import 'package:pomodoro/constants/color.dart';
 
-const int MINUTES = 1;
+const int MINUTES = 60;
 
 class PomodoroScreen extends StatefulWidget {
   const PomodoroScreen({super.key});
@@ -23,7 +23,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
   List<int> timerSelector = [
     15 * MINUTES,
     20 * MINUTES,
-    1 * MINUTES,
+    25 * MINUTES,
     30 * MINUTES,
     35 * MINUTES,
   ];
@@ -175,6 +175,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                   ),
 
                   SizedBox(height: constraints.maxHeight * 0.1),
+
                   // 타이머 선택기
                   AnimatedCrossFade(
                     duration: const Duration(milliseconds: 200),
@@ -187,18 +188,59 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                         isSelected: false,
                       ),
                     ),
-                    secondChild: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    secondChild: Stack(
                       children: [
-                        for (int i = 0; i < timerSelector.length; i++)
-                          TimeSelectButton(
-                            onPressed: () {
-                              selectTimer(i);
-                            },
-                            text: timerSelector[i].toString(),
-                            // text: (timerSelector[i] / 60).floor().toString(),
-                            isSelected: currentTimerIndex == i,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            for (int i = 0; i < timerSelector.length; i++)
+                              TimeSelectButton(
+                                onPressed: () {
+                                  selectTimer(i);
+                                },
+                                text:
+                                    (timerSelector[i] / 60).floor().toString(),
+                                isSelected: currentTimerIndex == i,
+                              ),
+                          ],
+                        ),
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          AppColors.primary.withOpacity(1),
+                                          AppColors.primary.withOpacity(0),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                        colors: [
+                                          AppColors.primary.withOpacity(1),
+                                          AppColors.primary.withOpacity(0),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+                        ),
                       ],
                     ),
                   ),
