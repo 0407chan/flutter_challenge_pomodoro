@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro/constants/color.dart';
 import 'package:pomodoro/screens/pomodoro_screen.dart';
 
 void main() {
@@ -13,8 +14,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'POMOTIMER',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: true,
+        fontFamily: "pretendard",
+        scaffoldBackgroundColor: AppColors.primary,
       ),
       home: const PomodoroScreen(),
     );
