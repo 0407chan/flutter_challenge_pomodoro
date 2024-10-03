@@ -3,11 +3,12 @@ import 'dart:math';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:pomodoro/components/counter_card.dart';
 import 'package:pomodoro/components/time_select_button.dart';
 import 'package:pomodoro/components/timer_button.dart';
 import 'package:pomodoro/constants/color.dart';
 
-const int MINUTES = 1;
+const int MINUTES = 60;
 
 class PomodoroScreen extends StatefulWidget {
   const PomodoroScreen({super.key});
@@ -152,32 +153,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        width: 140,
-                        decoration: BoxDecoration(
-                          color: isBreak ? AppColors.primary : AppColors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isBreak
-                                ? AppColors.whiteSecondary
-                                : AppColors.white,
-                            width: 2,
-                          ),
-                        ),
-                        height: 160,
-                        alignment: Alignment.center,
-                        child: Text(
-                          getHours(timer),
-                          style: TextStyle(
-                            color:
-                                isBreak ? AppColors.white : AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -4,
-                            fontSize: 80,
-                          ),
-                        ),
+                      CounterCard(
+                        text: getHours(timer),
+                        isBreak: isBreak,
                       ),
                       const SizedBox(width: 8),
                       const Text(
@@ -189,36 +167,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeInOut,
-                        width: 140,
-                        height: 160,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: isBreak ? AppColors.primary : AppColors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isBreak
-                                ? AppColors.whiteSecondary
-                                : AppColors.white,
-                            width: 2,
-                          ),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 24,
-                        ),
-                        child: Text(
-                          getMinutes(timer),
-                          style: TextStyle(
-                            color:
-                                isBreak ? AppColors.white : AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -4,
-                            fontSize: 80,
-                          ),
-                        ),
+                      CounterCard(
+                        text: getMinutes(timer),
+                        isBreak: isBreak,
                       ),
                     ],
                   ),
@@ -244,7 +195,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                             onPressed: () {
                               selectTimer(i);
                             },
-                            text: timerSelector[i].toString(),
+                            text: (timerSelector[i] / 60).floor().toString(),
                             isSelected: currentTimerIndex == i,
                           ),
                       ],
