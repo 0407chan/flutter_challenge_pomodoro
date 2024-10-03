@@ -18,7 +18,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
   int round = 0, goal = 0, currentTimerIndex = 2, timer = 25 * MINUTES;
   bool isRunning = false, isBreak = false;
   List<int> timerSelector = [
-    15 * MINUTES,
+    1 * MINUTES,
     20 * MINUTES,
     25 * MINUTES,
     30 * MINUTES,
@@ -138,7 +138,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
                     width: 140,
                     decoration: BoxDecoration(
                       color: isBreak ? AppColors.primary : AppColors.white,
@@ -172,7 +174,9 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Container(
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
                     width: 140,
                     height: 160,
                     alignment: Alignment.center,
@@ -205,15 +209,18 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
 
               SizedBox(height: constraints.maxHeight * 0.1),
               // 타이머 선택기
-              if (isBreak)
-                const Center(
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 200),
+                crossFadeState: isBreak
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: const Center(
                   child: TimeSelectButton(
                     text: 'BREAK',
                     isSelected: false,
                   ),
                 ),
-              if (!isBreak)
-                Row(
+                secondChild: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     for (int i = 0; i < timerSelector.length; i++)
@@ -226,6 +233,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                       ),
                   ],
                 ),
+              ),
 
               SizedBox(height: constraints.maxHeight * 0.15),
               // 타이머 버튼
