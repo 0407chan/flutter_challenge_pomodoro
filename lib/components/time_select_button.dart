@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pomodoro/constants/color.dart';
 
 class TimeSelectButton extends StatelessWidget {
-  final Function() onPressed;
+  final Function()? onPressed;
   final String text;
   final bool isSelected;
   const TimeSelectButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.text,
     required this.isSelected,
   });
@@ -25,7 +25,7 @@ class TimeSelectButton extends StatelessWidget {
           ),
         ),
         backgroundColor: isSelected ? AppColors.white : Colors.transparent,
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         minimumSize: const Size(60, 50),
       ),
       child: Text(

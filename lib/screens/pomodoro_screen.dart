@@ -15,8 +15,8 @@ class PomodoroScreen extends StatefulWidget {
 }
 
 class _PomodoroScreenState extends State<PomodoroScreen> {
-  int round = 0, goal = 0;
-  bool isRunning = false;
+  int round = 0, goal = 0, currentTimerIndex = 2, timer = 25 * MINUTES;
+  bool isRunning = false, isBreak = false;
   List<int> timerSelector = [
     15 * MINUTES,
     20 * MINUTES,
@@ -24,28 +24,41 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
     30 * MINUTES,
     35 * MINUTES,
   ];
-  int currentTimerIndex = 2;
-  int timer = 3 * MINUTES;
+  final int breakTime = 5 * MINUTES;
   late Timer? timerCounter;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = timerSelector[currentTimerIndex];
+  }
 
   void startTimer() {
     timerCounter = Timer.periodic(const Duration(seconds: 1), (t) {
-      setState(() {
-        if (timer > 0) {
-          timer--;
+      if (timer > 0) {
+        timer--;
+      } else {
+        t.cancel();
+
+        if (isBreak) {
+          // 휴식 종료
+          isBreak = false;
+          isRunning = false;
+          timer = timerSelector[currentTimerIndex];
         } else {
-          t.cancel();
-          setState(() {
-            isRunning = false;
-            round++;
-            if (round == 4) {
-              goal++;
-              round = 0;
-            }
-            timer = timerSelector[currentTimerIndex];
-          });
+          // 뽀모 종료
+          isBreak = true;
+          round++;
+          if (round == 4) {
+            goal++;
+            round = 0;
+          }
+          isRunning = false;
+          timer = breakTime;
         }
-      });
+      }
+
+      setState(() {});
     });
 
     setState(() {
@@ -63,6 +76,15 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
   void resetTimer() {
     timerCounter?.cancel();
     setState(() {
+      isRunning = false;
+      timer = timerSelector[currentTimerIndex];
+    });
+  }
+
+  void skipBreak() {
+    timerCounter?.cancel();
+    setState(() {
+      isBreak = false;
       isRunning = false;
       timer = timerSelector[currentTimerIndex];
     });
@@ -117,17 +139,23 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 130,
+                    width: 140,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(4),
+                      color: isBreak ? AppColors.primary : AppColors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isBreak
+                            ? AppColors.whiteSecondary
+                            : AppColors.white,
+                        width: 2,
+                      ),
                     ),
                     height: 160,
                     alignment: Alignment.center,
                     child: Text(
                       getHours(timer),
-                      style: const TextStyle(
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        color: isBreak ? AppColors.white : AppColors.primary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -4,
                         fontSize: 80,
@@ -145,12 +173,18 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    width: 130,
+                    width: 140,
                     height: 160,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(4),
+                      color: isBreak ? AppColors.primary : AppColors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isBreak
+                            ? AppColors.whiteSecondary
+                            : AppColors.white,
+                        width: 2,
+                      ),
                     ),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -158,8 +192,8 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                     ),
                     child: Text(
                       getMinutes(timer),
-                      style: const TextStyle(
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        color: isBreak ? AppColors.white : AppColors.primary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -4,
                         fontSize: 80,
@@ -171,19 +205,27 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
 
               SizedBox(height: constraints.maxHeight * 0.1),
               // 타이머 선택기
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  for (int i = 0; i < timerSelector.length; i++)
-                    TimeSelectButton(
-                      onPressed: () {
-                        selectTimer(i);
-                      },
-                      text: timerSelector[i].toString(),
-                      isSelected: currentTimerIndex == i,
-                    ),
-                ],
-              ),
+              if (isBreak)
+                const Center(
+                  child: TimeSelectButton(
+                    text: 'BREAK',
+                    isSelected: false,
+                  ),
+                ),
+              if (!isBreak)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    for (int i = 0; i < timerSelector.length; i++)
+                      TimeSelectButton(
+                        onPressed: () {
+                          selectTimer(i);
+                        },
+                        text: timerSelector[i].toString(),
+                        isSelected: currentTimerIndex == i,
+                      ),
+                  ],
+                ),
 
               SizedBox(height: constraints.maxHeight * 0.15),
               // 타이머 버튼
@@ -194,11 +236,17 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                     onPressed: isRunning ? stopTimer : startTimer,
                     icon: isRunning ? Icons.pause : Icons.play_arrow,
                   ),
-                  const SizedBox(width: 16),
-                  if (!isRunning)
+                  if (!isBreak) const SizedBox(width: 16),
+                  if (!isRunning && !isBreak)
                     TimerButton(
                       onPressed: resetTimer,
                       icon: Icons.refresh,
+                    ),
+                  if (isBreak) const SizedBox(width: 16),
+                  if (isBreak)
+                    TimerButton(
+                      onPressed: skipBreak,
+                      icon: Icons.skip_next,
                     ),
                 ],
               ),
