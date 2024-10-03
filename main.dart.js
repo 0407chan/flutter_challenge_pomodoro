@@ -51231,7 +51231,7 @@ i.push(A.Sy(n,B.aC,B.fn,B.bD))}i.push(A.Ad(q,p*0.15,q))
 p=m.w
 n=p?m.gG3():m.gG1()
 n=A.a([new A.mp(n,p?B.xA:B.xB,q)],k)
-if(!m.x)n.push(B.tv)
+if(!m.w&&!m.x)n.push(B.tv)
 if(!m.w&&!m.x)n.push(new A.mp(m.gVV(),B.xC,q))
 if(m.x)n.push(B.tv)
 if(m.x)n.push(new A.mp(m.gFQ(),B.xD,q))
