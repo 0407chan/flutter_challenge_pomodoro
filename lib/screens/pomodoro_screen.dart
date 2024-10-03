@@ -236,7 +236,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                     onPressed: isRunning ? stopTimer : startTimer,
                     icon: isRunning ? Icons.pause : Icons.play_arrow,
                   ),
-                  if (!isBreak) const SizedBox(width: 16),
+                  if (!isRunning && !isBreak) const SizedBox(width: 16),
                   if (!isRunning && !isBreak)
                     TimerButton(
                       onPressed: resetTimer,
