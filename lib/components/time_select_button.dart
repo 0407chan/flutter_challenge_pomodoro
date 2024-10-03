@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomodoro/constants/color.dart';
 
 class TimeSelectButton extends StatelessWidget {
   final Function() onPressed;
@@ -18,16 +19,23 @@ class TimeSelectButton extends StatelessWidget {
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
-          side: BorderSide(
-            color: isSelected ? Colors.transparent : Colors.black,
+          side: const BorderSide(
+            color: AppColors.whiteSecondary,
             width: 2,
           ),
         ),
-        backgroundColor: isSelected ? Colors.black : Colors.transparent,
+        backgroundColor: isSelected ? AppColors.white : Colors.transparent,
         padding: const EdgeInsets.all(0),
-        minimumSize: const Size(60, 40),
+        minimumSize: const Size(60, 50),
       ),
-      child: Text(text),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isSelected ? AppColors.primary : AppColors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+        ),
+      ),
     );
   }
 }
