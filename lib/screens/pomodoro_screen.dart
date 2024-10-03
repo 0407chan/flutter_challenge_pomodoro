@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pomodoro/components/time_select_button.dart';
+import 'package:pomodoro/constants/color.dart';
 
 const int MINUTES = 1;
 
@@ -32,7 +33,6 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
         if (timer > 0) {
           timer--;
         } else {
-          print('timer ended: $timer');
           t.cancel();
           setState(() {
             isRunning = false;
@@ -94,8 +94,17 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('POMOTIMER'),
+        title: const Text(
+          'POMOTIMER',
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
         centerTitle: false,
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.white,
       ),
       body: Column(
         children: [
@@ -148,14 +157,42 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
             children: [
               Column(
                 children: [
-                  Text('$round/4'),
-                  const Text("ROUND"),
+                  Text(
+                    '$round/4',
+                    style: const TextStyle(
+                      color: AppColors.whiteSecondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                  ),
+                  const Text(
+                    "ROUND",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
               Column(
                 children: [
-                  Text('$goal/12'),
-                  const Text("GOAL"),
+                  Text(
+                    '$goal/12',
+                    style: const TextStyle(
+                      color: AppColors.whiteSecondary,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    "GOAL",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
                 ],
               ),
             ],
