@@ -8,7 +8,7 @@ import 'package:pomodoro/components/time_select_button.dart';
 import 'package:pomodoro/components/timer_button.dart';
 import 'package:pomodoro/constants/color.dart';
 
-const int MINUTES = 60;
+const int MINUTES = 1;
 
 class PomodoroScreen extends StatefulWidget {
   const PomodoroScreen({super.key});
@@ -23,7 +23,7 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
   List<int> timerSelector = [
     15 * MINUTES,
     20 * MINUTES,
-    25 * MINUTES,
+    1 * MINUTES,
     30 * MINUTES,
     35 * MINUTES,
   ];
@@ -195,7 +195,8 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                             onPressed: () {
                               selectTimer(i);
                             },
-                            text: (timerSelector[i] / 60).floor().toString(),
+                            text: timerSelector[i].toString(),
+                            // text: (timerSelector[i] / 60).floor().toString(),
                             isSelected: currentTimerIndex == i,
                           ),
                       ],
